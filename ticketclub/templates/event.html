@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>TicketClub</title>
+</head>
+<style>
+</style>
+
+<body class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">TicketClub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="events">Все события</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="account">Личный кабинет</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-6 col-12">
+            {%for event in events%}
+            <div class="container">
+
+                <h5 class="display-5 row">{{event.name}}</h5>
+                <div class="row">
+                    <img class="img-fluid px-0" src="{{MEDIA_URL}}{{event.image.url}}" alt="">
+                </div>
+                <p class="row">{{event.about_text}}</p>
+                <p class="row">Начало: {{event.start_date}} в {{event.start_time}} </p>
+                <p class="row">Конец: {{event.end_date}} в {{event.end_time}} </p>
+                <p class="row">Адрес: {{event.place}}</p>
+                <p class="row">Город: {{event.city}}</p>
+                <p class="row">Категория: {{event.category}}</p>
+            </div>
+            {%endfor%}
+        </div>
+        <div class="col-sm-6 col-12">
+            <div class="container">
+                {% if user.is_superuser == True %}
+                <div class="row">
+                    <h5 class="display-5 row">Добавить место</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="id_seat_no">Номер места</label>
+                        {{ seatAddForm.seat_no }}
+                        <label for="id_price">Стоимость</label>
+                        {{ seatAddForm.price }}
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div>
+                        <h5 class="display-5 row">Доступные места</h5>
+                        <!-- div for button trigger modal -->
+                        <div class="div_btn_modal_pay d-flex justify-content-end">
+
+                        </div>
+                        {% if seats %}
+                        <!-- {%for seat in seats%}
+                        <label for="{{seat.id}}">{{seat.seat_no}} {{seat.price}}₽</label>
+                        <input type="checkbox" seat_id="{{seat.id}}" class="selSeat form-check-input" id="{{seat.id}}" title="{{seat.seat_no}} {{seat.price}}₽">
+                        {%endfor%} -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Номер места</th>
+                                    <th scope="col">Стоимость места</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for seat in seats%}
+                                <tr>
+                                    <th scope="row"><label style="cursor: pointer;" class="w-100"
+                                            for="seat_id_{{seat.id}}">{{seat.seat_no}}</label></th>
+                                    <td><label style="cursor: pointer;" class="w-100"
+                                            for="seat_id_{{seat.id}}">{{seat.price}}₽</label></td>
+                                    <td><input style="cursor: pointer;" type="checkbox" seat_id="{{seat.id}}"
+                                            id="seat_id_{{seat.id}}" class="selSeat form-check-input">
+                                    </td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            Мест нет
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Оформление билета</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form_pay">
+                        <label for="email">Email</label>
+                        <input class="form-control" id="email" type="email">
+                        <button class="pay btn btn-primary">Забронировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="btn_modal_pay">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Забронировать
+        </button>
+    </template>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+    </script>
+<script>
+    let btns = document.querySelectorAll('.selSeat');
+    let params = new URLSearchParams(document.location.search);
+    let event_id = params.get('id');
+    let btnPay = document.querySelector('.pay');
+    let sel_seats = []
+    btns.forEach(function (btn) {
+        btn.addEventListener('change', function () {
+            let seat_id = btn.getAttribute('seat_id')
+            if (btn.checked) {
+                sel_seats.push(seat_id)
+            }
+            else {
+                let index = sel_seats.indexOf(seat_id)
+                console.log(index)
+                sel_seats.splice(index, 1)
+            }
+            console.log(sel_seats)
+            if (sel_seats.length == 0) {
+                document.querySelector('.div_btn_modal_pay').innerHTML = ''
+            }
+            else {
+                document.querySelector('.div_btn_modal_pay').innerHTML = ''
+                let dbmp = document.querySelector('.div_btn_modal_pay')
+                let template = document.querySelector('#btn_modal_pay').content.cloneNode(true);
+                dbmp.appendChild(template)
+            }
+        })
+    })
+    btnPay.addEventListener('click', function () {
+        const formdata = new FormData();
+        formdata.append('sel_seats', sel_seats);
+        formdata.append('event_id', event_id);
+        formdata.append('email', document.querySelector('#email').value);
+        const requestOptions = {
+            method: "POST",
+            body: formdata
+        };
+        fetch(`pay`, requestOptions)
+            .then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    console.log('OK')
+                } else {
+                    console.log('ERROR')
+                }
+            })
+        location.replace(document.URL);
+    })
+</script>
+
+</html>

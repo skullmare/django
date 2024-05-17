@@ -102,10 +102,10 @@ def register_page(request):
                 if user is not None:
                     login(request,user)
             except:
-                return render(request, 'register.html', {'error': 'Такой email уже используется'})
+                return render(request, 'register.html', {'error': 'Такой email уже используется', 'user': request.user})
             return redirect('/account')
 
-    return render(request, 'register.html')
+    return render(request, 'register.html', {'user': request.user})
 # -----------------------------------------account-----------------------------------------
 def account_page(request):
     try:
@@ -119,7 +119,6 @@ def account_page(request):
                             ''')
     except:
         tickets = None
-    print(tickets)
     if request.method == 'POST':
         user = authenticate(username = request.POST['email'],
                              password = request.POST['password'])
@@ -149,7 +148,7 @@ def pay_view(request):
                                         client_id=client.objects.get(email=email).id,
                                         ticket_amount=seat.objects.get(id=seat_id).price,
                                         seat_id=seat_id)
-        return render(request, 'pay.html')
+    return render(request, 'pay.html')
 def generate_ticket_no(length):
     letters = string.ascii_uppercase
     rand_string = ''.join(random.choice(letters) for i in range(length))

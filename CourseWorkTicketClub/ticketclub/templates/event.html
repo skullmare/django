@@ -12,14 +12,14 @@
 </style>
 
 <body class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">TicketClub</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/">Главная</a>
@@ -31,6 +31,12 @@
                         <a class="nav-link" href="account">Личный кабинет</a>
                     </li>
                 </ul>
+                {% if user.is_anonymous == False %}
+                <div class="email">
+                    {{user.email}}
+                    <a class="btn btn-primary" href="logout">Выйти</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -43,12 +49,15 @@
                 <div class="row">
                     <img class="img-fluid px-0" src="{{MEDIA_URL}}{{event.image.url}}" alt="">
                 </div>
-                <p class="row">{{event.about_text}}</p>
-                <p class="row">Начало: {{event.start_date}} в {{event.start_time}} </p>
-                <p class="row">Конец: {{event.end_date}} в {{event.end_time}} </p>
-                <p class="row">Адрес: {{event.place}}</p>
-                <p class="row">Город: {{event.city}}</p>
-                <p class="row">Категория: {{event.category}}</p>
+                <div class="row">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">{{event.about_text}}</li>
+                        <li class="list-group-item">Начало: {{event.start_date}} в {{event.start_time}} </li>
+                        <li class="list-group-item">Конец: {{event.end_date}} в {{event.end_time}}</li>
+                        <li class="list-group-item">Адрес: {{event.place}} г. {{event.city}}</li>
+                        <li class="list-group-item">Категория: {{event.category}}</li>
+                    </ul>
+                </div>
             </div>
             {%endfor%}
         </div>
@@ -70,15 +79,10 @@
                 <div class="row">
                     <div>
                         <h5 class="display-5 row">Доступные места</h5>
-                        <!-- div for button trigger modal -->
                         <div class="div_btn_modal_pay d-flex justify-content-end">
 
                         </div>
                         {% if seats %}
-                        <!-- {%for seat in seats%}
-                        <label for="{{seat.id}}">{{seat.seat_no}} {{seat.price}}₽</label>
-                        <input type="checkbox" seat_id="{{seat.id}}" class="selSeat form-check-input" id="{{seat.id}}" title="{{seat.seat_no}} {{seat.price}}₽">
-                        {%endfor%} -->
                         <table class="table">
                             <thead>
                                 <tr>
@@ -111,7 +115,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -122,9 +125,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form_pay">
-                        <label for="email">Email</label>
-                        <input class="form-control" id="email" type="email">
-                        <button class="pay btn btn-primary">Забронировать</button>
+                        <label for="email">Введите Email на который хотите забронировать билеты</label>
+                        <input class="form-control mb-2" id="email" type="email">
+                        <div class="d-flex justify-content-end">
+                            <button class="pay btn btn-primary">Забронировать</button>
+                        </div>
                     </div>
                 </div>
             </div>

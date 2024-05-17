@@ -19,7 +19,7 @@ class client(models.Model):
 class event(models.Model):
     name = models.CharField(max_length=30, blank=False)
     image = models.ImageField(upload_to='images/', max_length=300)
-    about_text = models.CharField(max_length=300)
+    about_text = models.CharField(max_length=500)
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()

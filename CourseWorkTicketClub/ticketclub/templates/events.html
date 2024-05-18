@@ -61,7 +61,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap justify-content-center">
         {%for event in events%}
         <div class="card me-2 mb-2" style="width: 18rem;">
             <div style="overflow: hidden; height: 180px;" class="card-img-top text-center">
@@ -146,7 +146,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" class="container" enctype="multipart/form-data">
+                    <form method="post" class="container form_update" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="id_name_update">Название</label>
                         {{ form_update.name }}
@@ -212,24 +212,24 @@
     let btn_modal_update_event = document.querySelectorAll('.btn_modal_update_event')
     btn_modal_update_event.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            fetch(`/api/events/?format=json`)
+            fetch(`/api/events/?format=json&id=${btn.getAttribute('event_id')}`)
                 .then((response) => response.json())
                 .then((response) => fill_fields_model(response))
         })
         function fill_fields_model(events) {
             events.forEach(function (event) {
-                if (event.id == btn.getAttribute('event_id')) {
-                    document.querySelector('#id_name_update').value = event.name
-                    document.querySelector('#id_about_text_update').value = event.about_text
-                    document.querySelector('#id_start_date_update').value = event.start_date
-                    document.querySelector('#id_end_date_update').value = event.end_date
-                    document.querySelector('#id_start_time_update').value = event.start_time
-                    document.querySelector('#id_end_time_update').value = event.end_time
-                    document.querySelector('#id_place_update').value = event.place
-                    document.querySelector('#id_city_update').value = event.city
-                    document.querySelector('#id_category_update').value = event.category
-                    document.querySelector('#event_id_hidden').value = event.id
-                }
+                [...document.querySelector('.form_update').children].forEach(i => {
+                    Object.keys(event).forEach(key => {
+                        if (i.id.includes(key)) {
+                            try {
+                                i.value = event[key]
+                            }
+                            catch {
+                                None
+                            }
+                        }
+                    })
+                })
             })
         }
     })

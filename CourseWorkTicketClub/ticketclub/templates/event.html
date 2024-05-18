@@ -78,35 +78,38 @@
                 {% endif %}
                 <div class="row">
                     <div>
-                        <h5 class="display-5 row">Доступные места</h5>
+                        <h5 class="display-5 row mb-2">Доступные места</h5>
                         <div class="div_btn_modal_pay d-flex justify-content-end">
 
                         </div>
                         {% if seats %}
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Номер места</th>
-                                    <th scope="col">Стоимость места</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {%for seat in seats%}
-                                <tr>
-                                    <th scope="row"><label style="cursor: pointer;" class="w-100"
-                                            for="seat_id_{{seat.id}}">{{seat.seat_no}}</label></th>
-                                    <td><label style="cursor: pointer;" class="w-100"
-                                            for="seat_id_{{seat.id}}">{{seat.price}}₽</label></td>
-                                    <td><input style="cursor: pointer;" type="checkbox" seat_id="{{seat.id}}"
-                                            id="seat_id_{{seat.id}}" class="selSeat form-check-input">
-                                    </td>
-                                </tr>
-                                {%endfor%}
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Номер места</th>
+                                        <th scope="col">Стоимость места</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for seat in seats%}
+                                    <tr>
+                                        <th scope="row"><label style="cursor: pointer;" class="w-100"
+                                                for="seat_id_{{seat.id}}">{{seat.seat_no}}</label></th>
+                                        <td><label style="cursor: pointer;" class="w-100"
+                                                for="seat_id_{{seat.id}}">{{seat.price}}₽</label></td>
+                                        <td><input style="cursor: pointer;" type="checkbox" seat_id="{{seat.id}}"
+                                                id="seat_id_{{seat.id}}" class="selSeat form-check-input">
+                                        </td>
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+
                         {% else %}
-                        <div class="alert alert-danger" role="alert">
+                        <div class="row alert alert-danger" role="alert">
                             Мест нет
                         </div>
                         {% endif %}

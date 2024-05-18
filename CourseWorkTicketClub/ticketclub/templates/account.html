@@ -38,6 +38,11 @@
             </div>
         </div>
     </nav>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
     {% if user.is_anonymous == False %}
     <h5 class="display-5">Ваши билеты</h5>
     {% if tickets %}

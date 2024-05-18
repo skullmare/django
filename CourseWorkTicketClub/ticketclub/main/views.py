@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import random, string
 from .serializers import EventSerializer
 from django.views.decorators.csrf import csrf_exempt
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -104,6 +105,8 @@ def register_page(request):
             except:
                 return render(request, 'register.html', {'error': 'Такой email уже используется', 'user': request.user})
             return redirect('/account')
+        else:
+            return render(request, 'register.html', {'error': 'Введен некоректный email', 'user': request.user})
 
     return render(request, 'register.html', {'user': request.user})
 # -----------------------------------------account-----------------------------------------
@@ -124,6 +127,8 @@ def account_page(request):
                              password = request.POST['password'])
         if user is not None:
             login(request,user)
+        else:
+            return render(request, 'account.html', {'user': request.user, 'tickets': tickets, 'error': 'Нет аккаунта с таким email адресом'})
         return redirect('/account')
     return render(request, 'account.html', {'user': request.user, 'tickets': tickets})
 # -----------------------------------------logout------------------------------------------
@@ -156,3 +161,5 @@ def generate_ticket_no(length):
 class eventView(ModelViewSet):
     queryset = event.objects.all()
     serializer_class = EventSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id']

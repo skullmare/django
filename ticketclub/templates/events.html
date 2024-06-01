@@ -110,6 +110,10 @@
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                    <div class="alert alert-danger" role="alert">
+                        Ничего не найдено
+                    </div>
                 {%endfor%}
             </div>
             {% if user.is_superuser == True %}

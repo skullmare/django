@@ -9,7 +9,12 @@ class categories(models.Model):
     name = models.CharField(max_length=30, blank=False)
     def __str__(self):
         return f'{self.name}'
-
+    
+class participant(models.Model):
+    name = models.CharField(max_length=30, blank=False)
+    def __str__(self):
+        return f'{self.name}'
+    
 class client(models.Model):
     email = models.CharField(max_length=256, blank=False)
 
@@ -27,6 +32,7 @@ class event(models.Model):
     place = models.CharField(max_length=30)
     city = models.CharField(max_length=30)
     category = models.ForeignKey(categories, on_delete=models.CASCADE)
+    participants = models.ManyToManyField(participant)
     def __str__(self):
             return f'{self.name}'
 

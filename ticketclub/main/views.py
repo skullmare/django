@@ -115,6 +115,7 @@ def register_page(request):
 
     return render(request, 'register.html', {'user': request.user})
 # -----------------------------------------account-----------------------------------------
+
 def account_page(request):
     try:
         tickets = ticket.objects.raw(f'''
@@ -158,7 +159,7 @@ def pay_view(request):
                                         client_id=client.objects.get(email=email).id,
                                         ticket_amount=seat.objects.get(id=seat_id).price,
                                         seat_id=seat_id)
-    return render(request, 'pay.html')
+            return render(request, 'pay.html')
 def generate_ticket_no(length):
     letters = string.ascii_uppercase
     rand_string = ''.join(random.choice(letters) for i in range(length))

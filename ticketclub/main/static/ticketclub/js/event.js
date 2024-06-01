@@ -38,10 +38,12 @@ let btns = document.querySelectorAll('.selSeat');
         fetch(`pay`, requestOptions)
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
-                    console.log('OK')
+                    alert('Бронирование произведено успешно')
+                    location.replace(document.URL);
                 } else {
-                    console.log('ERROR')
+                    alert('Бронирование отклонено')
+                    location.replace(document.URL);
                 }
             })
-        location.replace(document.URL);
+        
     })

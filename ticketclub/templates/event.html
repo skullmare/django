@@ -57,6 +57,11 @@
                         <div class="row">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">{{event.about_text}}</li>
+                                <li class="list-group-item">Исполнители:
+                                    {% for p in event.participants.all %}
+                                    {{p.name}}
+                                    {% endfor %}
+                                </li>
                                 <li class="list-group-item">Начало: {{event.start_date}} в {{event.start_time}} </li>
                                 <li class="list-group-item">Конец: {{event.end_date}} в {{event.end_time}}</li>
                                 <li class="list-group-item">Адрес: {{event.place}} г. {{event.city}}</li>
